@@ -1,0 +1,193 @@
+/* Reset e Base */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+    background-color: #E5DDD0;
+    color: #373631;
+    font-family: 'Inconsolata', monospace;
+    overflow-x: hidden;
+    cursor: none;
+}
+
+a { text-decoration: none; color: inherit; }
+
+/* Cursor */
+.cursor-dot { position: fixed; width: 8px; height: 8px; background: #293B5F; border-radius: 50%; pointer-events: none; z-index: 999; transform: translate(-50%, -50%); }
+.cursor-outline { position: fixed; width: 40px; height: 40px; border: 2px solid rgba(41, 59, 95, 0.5); border-radius: 50%; pointer-events: none; z-index: 999; transform: translate(-50%, -50%); transition: all 0.2s ease; }
+
+
+/* Layout Split Screen */
+.bio-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Lado Esquerdo (Foto Fixa) */
+.bio-image-sticky {
+    width: 50%;
+    height: 100vh;
+    position: sticky;
+    top: 0;
+    display: flex;
+    flex-direction: column; 
+    justify-content: center;
+    align-items: center;
+    padding: 4rem;
+    border-right: 1px solid rgba(55, 54, 49, 0.1);
+}
+
+.image-wrapper {
+    width: 100%;
+    max-width: 600px;
+    position: relative;
+}
+
+.bio-photo {
+    width: 100%;
+    height: auto;
+    display: block;
+    filter: grayscale(100%); /* Foto Preto e Branco */
+    box-shadow: 20px 20px 0px rgba(55, 54, 49, 0.1); /* Sombra sólida */
+}
+
+/* Container do botão abaixo da foto */
+.bio-footer-left {
+    width: 100%;
+    max-width: 600px; /* Mesma largura da foto */
+    margin-top: 5rem;
+    text-align: left; 
+}
+
+/* Estilo do Botão Voltar */
+.voltar-btn {
+    display: inline-block;
+    padding: 0.8rem 2rem;
+    background-color: #373631;
+    color: #E5DDD0;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 700;
+    font-style: italic;
+    font-size: 0.9rem;
+    border: 1px solid #373631;
+    transition: all 0.3s ease;
+
+}
+
+
+
+.voltar-btn:hover {
+    background-color: #E5DDD0;
+    color: #373631;
+}
+
+
+/* Lado Direito (Texto) */
+.bio-text-scroll {
+    width: 50%;
+    padding: 8rem 4rem 4rem 6rem;
+}
+
+.bio-header { margin-bottom: 4rem; }
+.bio-header h1 {
+    font-family: 'Montserrat', sans-serif; font-weight: 300; font-size: 4rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 0.5rem;
+}
+.bio-header h2 {
+    font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 400; font-size: 2.5rem; color: #7A5656;
+}
+
+.bio-content h3 {
+    font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: 1.8rem; margin-bottom: 1rem; margin-top: 3rem;
+}
+
+.bio-content p {
+    font-size: 1.1rem; line-height: 1.8; margin-bottom: 1.5rem; text-align: justify;
+}
+
+.divider {
+    width: 50px; height: 2px; background-color: #373631; margin: 3rem 0;
+}
+
+.bio-quote {
+    font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.8rem; line-height: 1.4;
+    margin: 3rem 0; padding-left: 2rem; border-left: 4px solid #7A5656;
+}
+
+/* Ajustar tela */
+@media (max-width: 900px) {
+    .bio-container { flex-direction: column; }
+    .bio-image-sticky { width: 100%; height: auto; position: relative; padding: 2rem; border-right: none; border-bottom: 1px solid rgba(55,54,49,0.1); }
+    .bio-text-scroll { width: 100%; padding: 4rem 2rem; }
+    .bio-header h1 { font-size: 3rem; }
+    .bio-footer-left { text-align: center; } /* Centraliza botão no mobile */
+}
+
+/*  ANIMAÇÕES DE ENTRADA */
+
+/* 1. Definindo a animação (Keyframes) */
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px); 
+        filter: blur(5px); 
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+        filter: blur(0);
+    }
+}
+
+@keyframes revealPhoto {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* 2. Estado inicial dos elementos (Invisíveis antes de animar) */
+.image-wrapper,
+.bio-header h1,
+.bio-header h2,
+.bio-content,
+.voltar-btn {
+    opacity: 0; /* Garante que não apareçam antes da hora */
+    animation-fill-mode: forwards; /* Mantém o estado final (visível) após a animação */
+}
+
+/* 3. Aplicando os efwitos (Delays) */
+
+/* A foto entra primeiro */
+.image-wrapper {
+    animation: revealPhoto 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    animation-delay: 0.2s;
+}
+
+/* Título principal */
+.bio-header h1 {
+    animation: fadeInUp 0.8s ease-out forwards;
+    animation-delay: 0.4s;
+}
+
+/* Subtítulo */
+.bio-header h2 {
+    animation: fadeInUp 0.8s ease-out forwards;
+    animation-delay: 0.6s;
+}
+
+/* O texto sobre o Fausto Nilo */
+.bio-content {
+    animation: fadeInUp 1s ease-out forwards;
+    animation-delay: 0.9s;
+}
+
+/* Botão voltar */
+.voltar-btn {
+    animation: fadeInUp 0.8s ease-out forwards;
+    animation-delay: 1.2s;
+}

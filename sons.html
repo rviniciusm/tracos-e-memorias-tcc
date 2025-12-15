@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Traços e Memórias - (Sons)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,700;1,400;1,700&family=Inconsolata:wght@400;700&family=Montserrat:ital,wght@0,300;0,400;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="sons.css?v=25">
+</head>
+<body>
+
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
+    <header class="page-header">
+        <h1 class="page-title">(sons)</h1>
+        <p class="page-description">
+            A trilha sonora da cidade, desde as canções da radiadora Voz <br>
+            de Cristal às canções que remetem a cidade ou o povo.
+        </p>
+    </header>
+
+    <main class="tickets-container">
+
+        <div class="ticket-card" data-audio="audios/voz-de-cristal.mp3">
+            <div class="ticket-content">
+                <div class="ticket-left">
+                    <span class="ticket-number">Nº 01</span>
+                    <h2 class="ticket-title">A Voz de Cristal</h2>
+                    <p class="ticket-subtitle">Memórias da Radiadora</p>
+                </div>
+                <div class="ticket-right">
+                    <div class="play-button"><div class="play-icon"></div></div>
+                    <div class="barcode"></div>
+                </div>
+            </div>
+            <div class="progress-bar"><div class="progress-fill"></div></div>
+        </div>
+
+        <div class="ticket-card" data-audio="audios/dedicacoes.mp3">
+            <div class="ticket-content">
+                <div class="ticket-left">
+                    <span class="ticket-number">Nº 02</span>
+                    <h2 class="ticket-title">Pedidos & Oferecimentos</h2>
+                    <p class="ticket-subtitle">As Moedas da Tia</p>
+                </div>
+                <div class="ticket-right">
+                    <div class="play-button"><div class="play-icon"></div></div>
+                    <div class="barcode"></div>
+                </div>
+            </div>
+            <div class="progress-bar"><div class="progress-fill"></div></div>
+        </div>
+
+        <div class="ticket-card" data-youtube-id="cttR0kIWPgM" data-video-title="Alto Falante">
+            <div class="ticket-content youtube-ticket">
+                <div class="ticket-left">
+                    <span class="ticket-number">Nº 03</span>
+                    <h2 class="ticket-title">Alto Falante</h2>
+                    <p class="ticket-subtitle">Por Moraes Moreira</p>
+                </div>
+                <div class="ticket-right">
+                    <div class="play-button"><div class="play-icon"></div></div>
+                    <div class="barcode"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="ticket-card" data-youtube-id="SKyqwwdZOnA" data-video-title="Carinhoso">
+            <div class="ticket-content youtube-ticket">
+                <div class="ticket-left">
+                    <span class="ticket-number">Nº 04</span>
+                    <h2 class="ticket-title">Carinhoso</h2>
+                    <p class="ticket-subtitle">Orlando Silva</p>
+                </div>
+                <div class="ticket-right">
+                    <div class="play-button"><div class="play-icon"></div></div>
+                    <div class="barcode"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="ticket-card" data-youtube-id="atutJgnlu6o" data-video-title="Cidade Brinquedo">
+            <div class="ticket-content youtube-ticket">
+                <div class="ticket-left">
+                    <span class="ticket-number">Nº 05</span>
+                    <h2 class="ticket-title">Cidade Brinquedo</h2>
+                    <p class="ticket-subtitle">Orlando Silva</p>
+                </div>
+                <div class="ticket-right">
+                    <div class="play-button"><div class="play-icon"></div></div>
+                    <div class="barcode"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="ticket-card" data-youtube-id="zjX7a8T8zqk" data-video-title="Paroara">
+            <div class="ticket-content youtube-ticket">
+                <div class="ticket-left">
+                    <span class="ticket-number">Nº 06</span>
+                    <h2 class="ticket-title">Paroara</h2>
+                    <p class="ticket-subtitle">Canção do Album "Casa tudo Azul"</p>
+                </div>
+                <div class="ticket-right">
+                    <div class="play-button"><div class="play-icon"></div></div>
+                    <div class="barcode"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="ticket-card" data-youtube-id="qQTLmGPGIBs" data-video-title="Quixeramobim">
+            <div class="ticket-content youtube-ticket">
+                <div class="ticket-left">
+                    <span class="ticket-number">Nº 07</span>
+                    <h2 class="ticket-title">Quixeramobim</h2>
+                    <p class="ticket-subtitle">Fagner com composiçaõ de Fausto Nilo</p>
+                </div>
+                <div class="ticket-right">
+                    <div class="play-button"><div class="play-icon"></div></div>
+                    <div class="barcode"></div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="page-footer">
+        <a href="index.html" class="voltar-btn">Voltar</a>
+    </footer>
+
+    <audio id="global-audio-player"></audio>
+    <script src="sons.js?v=25"></script>
+
+</body>
+</html>
+
