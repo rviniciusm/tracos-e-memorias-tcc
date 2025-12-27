@@ -5,7 +5,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const cursorOutline = document.querySelector('.cursor-outline');
     const heroSection = document.querySelector('.hero');
     const heroVideo = document.querySelector('.hero-video');
+    
+    // Selecionamos as camadas de texto
     const heroOverlay = document.querySelector('[data-layer="overlay"]');
+    const heroBase = document.querySelector('[data-layer="base"]'); // ADICIONADO: Seleciona o texto azul
     
     // --- Variavel do Modal ---
     const journeyCards = document.querySelectorAll('.journey-card');
@@ -34,7 +37,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const scrollableHeight = heroSection.offsetHeight - window.innerHeight;
         let progress = window.scrollY / scrollableHeight;
         progress = Math.min(1, Math.max(0, progress));
-        const initialTop = 25
+
+        const initialTop = 25;
         const initialRight = 20;
         const initialBottom = 74.5;
         const initialLeft = 19;
@@ -47,6 +51,16 @@ document.addEventListener('DOMContentLoaded', function() {
         const clipPathValue = `inset(${currentTop}% ${currentRight}% ${currentBottom}% ${currentLeft}%)`;
 
         heroVideo.style.clipPath = clipPathValue;
+        
+        // --- CORREÇÃO DO TEXTO AZUL ---
+        // Faz o texto azul sumir um pouco mais rápido que o vídeo abre para limpar a tela
+        if (heroBase) {
+            let opacity = 1 - (progress * 1.5); 
+            if (opacity < 0) opacity = 0;
+            heroBase.style.opacity = opacity;
+        }
+        // -----------------------------
+
         if (heroOverlay) {
             const overlayAdjust = 0.5; 
             const overlayTop = Math.max(0, currentTop - overlayAdjust); 
@@ -87,6 +101,8 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             if(heroVideo) heroVideo.style.clipPath = `inset(0% 0%)`;
             if(heroOverlay) heroOverlay.style.clipPath = `inset(0% 0%)`;
+            // Garante que o texto azul sumiu completamente no final
+            if(heroBase) heroBase.style.opacity = '0';
         }
     }
     
@@ -136,13 +152,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
             
-            /*  Redirecionamento para a página SONS */
+            /* Redirecionamento para a página SONS */
             if (title === '(sons)') {
                 window.location.href = 'sons.html'; 
                 return;
             }
-
-          
 
             const img = card.dataset.img;
             const text = card.dataset.text;
@@ -232,20 +246,20 @@ document.addEventListener('DOMContentLoaded', function() {
             } else { 
                 const simpleModalHTML = `
                     <span class="modal-close">&times;</span>
-                     <div class="modal-preview-layout">
-                         <div class="modal-image-container" style="background-image: url('${img}')">
+                      <div class="modal-preview-layout">
+                          <div class="modal-image-container" style="background-image: url('${img}')">
                              <h2 class="modal-title">${title}</h2>
-                         </div>
-                         <div class="modal-text-content">
+                          </div>
+                          <div class="modal-text-content">
                               <p class="modal-quote">${quote || ''}</p>
                               <p>${text || ''}</p>
-                         </div>
-                          <div class="gallery-footer is-visible">
+                          </div>
+                           <div class="gallery-footer is-visible">
                               <div class="modal-exit-button">
                                   <a class="modal-close-trigger">Voltar</a>
                               </div>
-                          </div>
-                     </div>
+                           </div>
+                      </div>
                 `;
                 modalBody.innerHTML = simpleModalHTML;
             }
@@ -373,20 +387,20 @@ document.addEventListener('DOMContentLoaded', function() {
                           <div class="nav-arrow" id="prev-arrow"><svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg></div>
                           <div class="nav-arrow" id="next-arrow"><svg viewBox="0 0 24 24"><path d="M8.59 16.59L10 18l6-6-6-6-1.41 1.41L13.17 12z"/></svg></div>
                       </div>
-                     <div class="gallery-carousel">
-                         ${galleryData.map((item, index) => `
-                             <div class="gallery-item" data-index="${index}">
-                                 <img src="${item.img}" alt="${item.title}" class="gallery-image">
-                             </div>
-                         `).join('')}
-                     </div>
+                      <div class="gallery-carousel">
+                          ${galleryData.map((item, index) => `
+                              <div class="gallery-item" data-index="${index}">
+                                  <img src="${item.img}" alt="${item.title}" class="gallery-image">
+                              </div>
+                          `).join('')}
+                      </div>
                  </div>
                  <div class="gallery-info-panel">
                       <div class="gallery-text">
                           <h4></h4>
                           <p></p>
-                     </div>
-                     <div class="gallery-controls">
+                      </div>
+                      <div class="gallery-controls">
                           <button class="control-btn info-toggle" title="Saber mais"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg></button>
                           <button class="control-btn audio-toggle" title="Ouvir"><svg class="play-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg><svg class="pause-icon" style="display:none;" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg></button>
                           <div class="gallery-timer-container">
@@ -395,11 +409,11 @@ document.addEventListener('DOMContentLoaded', function() {
                                   <path class="timer-progress" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
                               </svg>
                           </div>
-                     </div>
-                     <div class="extra-info">
+                      </div>
+                      <div class="extra-info">
                           <p></p>
                           <button class="continue-btn">Continuar</button>
-                     </div>
+                      </div>
                  </div>
              </div>
               ${galleryData.map(item => `<audio class="gallery-audio" src="${item.audioSrc}" preload="metadata"></audio>`).join('')}
@@ -444,11 +458,11 @@ document.addEventListener('DOMContentLoaded', function() {
                  const rotateY = 45;
 
                  if (itemIdx < currentItem) {
-                      transform = `translateX(-50%) translateZ(-${zTranslate}px) rotateY(${rotateY}deg)`;
+                       transform = `translateX(-50%) translateZ(-${zTranslate}px) rotateY(${rotateY}deg)`;
                  } else if (itemIdx > currentItem) {
-                      transform = `translateX(50%) translateZ(-${zTranslate}px) rotateY(-${rotateY}deg)`;
+                       transform = `translateX(50%) translateZ(-${zTranslate}px) rotateY(-${rotateY}deg)`;
                  } else {
-                      transform = `translateZ(0) rotateY(0)`;
+                       transform = `translateZ(0) rotateY(0)`;
                  }
                  item.style.transform = transform;
                  item.style.opacity = isActive ? '1' : '0.4';
@@ -621,7 +635,7 @@ document.addEventListener('DOMContentLoaded', function() {
         item.addEventListener('click', () => {
             if (!panel) return;
             
-            /*  Reset do painel ao clicar */
+            /* Reset do painel ao clicar */
             if (currentPanelAudio && !currentPanelAudio.paused) {
                 currentPanelAudio.pause();
             }
@@ -636,7 +650,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (audioPlayer) audioPlayer.style.display = 'flex';
 
 
-            /*  Fim do Reset */
+            /* Fim do Reset */
 
 
             const panelMediaContainer = panel.querySelector('#panel-media-container');
@@ -723,7 +737,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (panelCloseBtn) panelCloseBtn.addEventListener('click', closePanel);
 
-    /*  Fechar o painel ao clicar fora  */
+    /* Fechar o painel ao clicar fora  */
     document.addEventListener('click', function(event) {
         if (!panel || !panel.classList.contains('is-open')) {
             return;
@@ -744,7 +758,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const playIcon = panelAudioBtn.querySelector('.play-icon');
         const pauseIcon = panelAudioBtn.querySelector('.pause-icon');
 
-        /*  Lógica para tocar ÁUDIO ou VÍDEO */
+        /* Lógica para tocar ÁUDIO ou VÍDEO */
         panelAudioBtn.addEventListener('click', () => {
             const videoId = panel.dataset.youtubeId;
             const audioSrc = panel.dataset.audioSrc;
