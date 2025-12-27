@@ -33,8 +33,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const scrollableHeight = heroSection.offsetHeight - window.innerHeight;
         let progress = window.scrollY / scrollableHeight;
-        progress = Math.min(1, Math.max(0, progress));
-        const initialTop = 25
+        if (progress < 0) progress = 0;
+        if (progress > 0.95) progress = 1; // Se passou de 95%, considera 100% (Tela Cheia)
+
+        const initialTop = 25;
         const initialRight = 20;
         const initialBottom = 74.5;
         const initialLeft = 19;
@@ -44,16 +46,22 @@ document.addEventListener('DOMContentLoaded', function() {
         const currentBottom = initialBottom * (1 - progress);
         const currentLeft = initialLeft * (1 - progress);
         
-        const clipPathValue = `inset(${currentTop}% ${currentRight}% ${currentBottom}% ${currentLeft}%)`;
-
-        heroVideo.style.clipPath = clipPathValue;
-        if (heroOverlay) {
-            const overlayAdjust = 0.5; 
-            const overlayTop = Math.max(0, currentTop - overlayAdjust); 
-            const overlayRight = Math.max(0, currentRight - overlayAdjust); 
-            const overlayBottom = Math.max(0, currentBottom - overlayAdjust);
-            const overlayLeft = Math.max(0, currentLeft - overlayAdjust);
-            heroOverlay.style.clipPath = `inset(${overlayTop}% ${overlayRight}% ${overlayBottom}% ${overlayLeft}%)`;
+    
+        if (progress === 1) {
+             heroVideo.style.clipPath = 'inset(0% 0% 0% 0%)';
+             if (heroOverlay) heroOverlay.style.clipPath = 'inset(0% 0% 0% 0%)';
+        } else {
+             const clipPathValue = `inset(${currentTop}% ${currentRight}% ${currentBottom}% ${currentLeft}%)`;
+             heroVideo.style.clipPath = clipPathValue;
+             
+             if (heroOverlay) {
+                const overlayAdjust = 0.5; 
+                const overlayTop = Math.max(0, currentTop - overlayAdjust); 
+                const overlayRight = Math.max(0, currentRight - overlayAdjust); 
+                const overlayBottom = Math.max(0, currentBottom - overlayAdjust);
+                const overlayLeft = Math.max(0, currentLeft - overlayAdjust);
+                heroOverlay.style.clipPath = `inset(${overlayTop}% ${overlayRight}% ${overlayBottom}% ${overlayLeft}%)`;
+            }
         }
     }
     
@@ -835,5 +843,6 @@ document.addEventListener('DOMContentLoaded', function() {
     window.addEventListener('load', function() {
         document.body.classList.add('site-loaded');
     });
+
 
 });
