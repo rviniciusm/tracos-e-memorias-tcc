@@ -6,9 +6,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const heroSection = document.querySelector('.hero');
     const heroVideo = document.querySelector('.hero-video');
     
-    // Selecionamos as camadas de texto
+    // CAMADAS: Overlay (Texto Branco) e Base (Texto Azul)
     const heroOverlay = document.querySelector('[data-layer="overlay"]');
-    const heroBase = document.querySelector('[data-layer="base"]'); // ADICIONADO: Seleciona o texto azul
+    const heroBase = document.querySelector('[data-layer="base"]'); 
     
     // --- Variavel do Modal ---
     const journeyCards = document.querySelectorAll('.journey-card');
@@ -34,10 +34,36 @@ document.addEventListener('DOMContentLoaded', function() {
     function handleHeroScroll() {
         if (!heroSection || !heroVideo || !heroOverlay) return; 
 
+        // Calcula altura do scroll
         const scrollableHeight = heroSection.offsetHeight - window.innerHeight;
         let progress = window.scrollY / scrollableHeight;
+        
+        // Garante que o progresso fique entre 0 e 1
         progress = Math.min(1, Math.max(0, progress));
 
+        // Se o vídeo for menor, forçamos o final da animação um pouco antes (0.95)
+        // para garantir que ele abra todo
+        if (progress > 0.95) progress = 1;
+
+        // --- CORREÇÃO DO TEXTO DUPLICADO ---
+        // Aqui está o segredo: fazemos o texto azul (base) sumir 
+        // MUITO rápido (multiplicado por 4). 
+        // Assim que você rolar um pouco, ele some e deixa só o vídeo/texto branco.
+        if (heroBase) {
+            let baseOpacity = 1 - (progress * 4); 
+            if (baseOpacity < 0) baseOpacity = 0;
+            heroBase.style.opacity = baseOpacity;
+            
+            // Se estiver invisível, tira o clique para não atrapalhar
+            if (baseOpacity <= 0) {
+                heroBase.style.pointerEvents = 'none';
+            } else {
+                heroBase.style.pointerEvents = 'auto';
+            }
+        }
+        // -----------------------------------
+
+        // Valores de recorte do vídeo
         const initialTop = 25;
         const initialRight = 20;
         const initialBottom = 74.5;
@@ -51,15 +77,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const clipPathValue = `inset(${currentTop}% ${currentRight}% ${currentBottom}% ${currentLeft}%)`;
 
         heroVideo.style.clipPath = clipPathValue;
-        
-        // --- CORREÇÃO DO TEXTO AZUL ---
-        // Faz o texto azul sumir um pouco mais rápido que o vídeo abre para limpar a tela
-        if (heroBase) {
-            let opacity = 1 - (progress * 1.5); 
-            if (opacity < 0) opacity = 0;
-            heroBase.style.opacity = opacity;
-        }
-        // -----------------------------
 
         if (heroOverlay) {
             const overlayAdjust = 0.5; 
@@ -99,9 +116,11 @@ document.addEventListener('DOMContentLoaded', function() {
         if (scrollY < heroAnimationEnd) {
             handleHeroScroll();
         } else {
+            // Trava o vídeo aberto no final
             if(heroVideo) heroVideo.style.clipPath = `inset(0% 0%)`;
             if(heroOverlay) heroOverlay.style.clipPath = `inset(0% 0%)`;
-            // Garante que o texto azul sumiu completamente no final
+            
+            // Garante 100% que o texto azul sumiu
             if(heroBase) heroBase.style.opacity = '0';
         }
     }
