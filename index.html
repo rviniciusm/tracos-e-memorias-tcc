@@ -226,10 +226,45 @@
         <audio id="panel-audio-source" src=""></audio>
     </aside>
 
+    <style>
+    /* Força o fundo da jornada a aparecer */
+    #jornada, .journey-section {
+        background-color: #E5DDD0 !important;
+        position: relative !important;
+        z-index: 50 !important;
+    }
+    
+    /* Remove o corte do vídeo via CSS para garantir */
+    .hero-video {
+        clip-path: none !important;
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+    }
+</style>
+
+<script>
+    window.addEventListener('scroll', function() {
+        var video = document.querySelector('.hero-video');
+        var overlay = document.querySelector('[data-layer="overlay"]');
+        var hero = document.querySelector('.hero');
+        
+        if(hero && video) {
+            var scrollPos = window.scrollY;
+            var limit = hero.offsetHeight - window.innerHeight;
+            if (scrollPos > limit * 0.95) {
+                video.style.clipPath = 'inset(0% 0% 0% 0%)';
+                if(overlay) overlay.style.clipPath = 'inset(0% 0% 0% 0%)';
+            }
+        }
+    });
+</script>
+
  <link rel="stylesheet" href="style.css?v=99">
 <script src="script.js?v=99"></script>
 
 </body>
 
 </html>
+
 
