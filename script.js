@@ -28,36 +28,26 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // --- 2.  DEFINA TODAS AS FUNCTIONS ---
 
-    // --- SUBSTITUA A FUNÇÃO handleHeroScroll POR ESTA ---
     function handleHeroScroll() {
         if (!heroSection || !heroVideo || !heroOverlay) return; 
-
-        // Recalcula altura a cada frame para evitar bugs de redimensionamento
         const scrollableHeight = heroSection.offsetHeight - window.innerHeight;
-        
-        // Proteção contra divisão por zero
         if (scrollableHeight <= 0) return;
 
         let progress = window.scrollY / scrollableHeight;
-
-        // Limites matemáticos (Clamp)
+        
         if (progress < 0) progress = 0;
         if (progress > 1) progress = 1;
 
-        // Valores iniciais do inset (recorte)
         const initialTop = 25;
         const initialRight = 20;
         const initialBottom = 74.5;
         const initialLeft = 19;
 
-        // Calcula a posição atual baseada no progresso (0 a 1)
         const currentTop = initialTop * (1 - progress);
         const currentRight = initialRight * (1 - progress);
         const currentBottom = initialBottom * (1 - progress);
         const currentLeft = initialLeft * (1 - progress);
 
-        // APLICAÇÃO DO CLIP-PATH
-        // Se chegou em 99% ou mais, arredonda para 0 para evitar linha fina
         if (progress >= 0.99) {
              heroVideo.style.clipPath = 'inset(0% 0% 0% 0%)';
              if (heroOverlay) heroOverlay.style.clipPath = 'inset(0% 0% 0% 0%)';
@@ -66,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function() {
              heroVideo.style.clipPath = clipPathValue;
              
              if (heroOverlay) {
-                // Overlay abre um pouco mais rápido para dar efeito suave
+        
                 const overlayAdjust = 0.5; 
                 const overlayTop = Math.max(0, currentTop - overlayAdjust); 
                 const overlayRight = Math.max(0, currentRight - overlayAdjust); 
@@ -77,7 +67,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // --- SUBSTITUA A FUNÇÃO handleScroll POR ESTA ---
     function handleScroll() {
         if (!heroSection || !header) return; 
 
@@ -85,19 +74,18 @@ document.addEventListener('DOMContentLoaded', function() {
         const scrollY = window.scrollY;
 
         // --- Lógica do MENU (Cores) ---
-        // Adicionei uma margem de segurança (-10px) para garantir a troca suave
         
-        // PASSO 3: Passou do vídeo -> Fundo creme, texto azul
+        // PASSO 3: Passou do vídeo - Fundo creme, texto azul
         if (scrollY > heroAnimationEnd - 10) { 
             header.classList.add('scrolled');
             header.classList.remove('is-revealing');
         
-        // PASSO 2: Durante a animação -> Sem fundo, texto branco (para ver o vídeo)
+        // PASSO 2: Durante a animação - Sem fundo, texto branco (para ver o vídeo)
         } else if (scrollY > 50 && scrollY <= heroAnimationEnd - 10) { 
             header.classList.remove('scrolled');
             header.classList.add('is-revealing'); 
 
-        // PASSO 1: No topo -> Sem fundo, texto azul original
+        // PASSO 1: No topo - Sem fundo, texto azul original
         } else {
             header.classList.remove('scrolled');
             header.classList.remove('is-revealing');
@@ -867,5 +855,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 });
+
 
 
