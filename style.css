@@ -317,12 +317,14 @@ header.scrolled .nav-links::before {
 /* --- SEÇÃO DE JORNADA --- */
 .journey-section {
     padding: 100px 5%;
-    background-color: #E5DDD0; 
+    background-color: #E5DDD0; /* A cor do fundo (creme) */
     display: grid;
     grid-template-columns: 1fr;
     gap: 4rem;
     max-width: 1400px;
     margin: 0 auto;
+    position: relative; 
+    z-index: 10; 
 }
 
 .journey-title-block h2 {
@@ -1307,3 +1309,4 @@ body.panel-open #mapa-afetivo::before {
     }
 
 }
+
