@@ -26,95 +26,104 @@ document.addEventListener('DOMContentLoaded', function() {
     let resumeTimeout; 
     let currentPanelAudio = null;
 
-    // --- 2.  DEFINA TODAS AS FUNCTIONS ---
+    // --- 2.  DEFINE TODAS AS FUNCTIONS ---
 
-   // --- SUBSTITUA A FUNÇÃO handleHeroScroll POR ESTA ---
-function handleHeroScroll() {
-    if (!heroSection || !heroVideo) return; 
+    function handleHeroScroll() {
+        if (!heroSection || !heroVideo) return; 
 
-    // Calcula a altura disponível para o scroll da animação
-    const scrollableHeight = heroSection.offsetHeight - window.innerHeight;
-    
-    // Proteção: Se a seção for pequena demais, abre o vídeo direto
-    if (scrollableHeight <= 0) {
-        heroVideo.style.clipPath = 'inset(0%)';
-        if (heroOverlay) heroOverlay.style.clipPath = 'inset(0%)';
-        return;
+        // Seleciona os textos da Hero para aplicar transparência
+        const textElements = document.querySelectorAll('.hero-content, .hero h1, .hero p, .hero span');
+
+        // Calcula a altura disponível para o scroll da animação
+        const scrollableHeight = heroSection.offsetHeight - window.innerHeight;
+        
+        // Proteção: Se a seção for pequena demais, abre o vídeo direto e esconde texto
+        if (scrollableHeight <= 0) {
+            heroVideo.style.clipPath = 'inset(0%)';
+            if (heroOverlay) heroOverlay.style.clipPath = 'inset(0%)';
+            textElements.forEach(el => el.style.opacity = '0');
+            return;
+        }
+
+        let progress = window.scrollY / scrollableHeight;
+
+        // Se chegou em 98% do caminho, considera 100% para não sobrar bordas
+        if (progress > 0.98) progress = 1;
+        if (progress < 0) progress = 0;
+
+        const startInsetY = 40; // Começa com 40% de corte em cima e embaixo
+        const startInsetX = 15; // Começa com 15% de corte nos lados
+
+        const currentInsetY = startInsetY * (1 - progress);
+        const currentInsetX = startInsetX * (1 - progress);
+
+        if (progress === 1) {
+             heroVideo.style.clipPath = 'inset(0% 0% 0% 0%)';
+             if (heroOverlay) heroOverlay.style.clipPath = 'inset(0% 0% 0% 0%)';
+        } else {
+             heroVideo.style.clipPath = `inset(${currentInsetY}% ${currentInsetX}% ${currentInsetY}% ${currentInsetX}%)`;
+             
+             if (heroOverlay) {
+                const overlayY = Math.max(0, currentInsetY - 0.5); 
+                const overlayX = Math.max(0, currentInsetX - 0.5); 
+                heroOverlay.style.clipPath = `inset(${overlayY}% ${overlayX}% ${overlayY}% ${overlayX}%)`;
+            }
+        }
+        let textOpacity = 1 - (progress * 2.5);
+        if (textOpacity < 0) textOpacity = 0;
+
+        textElements.forEach(element => {
+            element.style.opacity = textOpacity;
+            if (textOpacity <= 0.1) {
+                element.style.pointerEvents = 'none';
+            } else {
+                element.style.pointerEvents = 'auto';
+            }
+        });
     }
 
-    let progress = window.scrollY / scrollableHeight;
+    function handleScroll() {
+        if (!heroSection || !header) return; 
 
-  
-    // Se chegou em 98% do caminho, considera 100% para não sobrar bordas
-    if (progress > 0.93) progress = 1;
-    if (progress < 0) progress = 0;
+        const heroAnimationEnd = heroSection.offsetHeight - window.innerHeight;
+        const scrollY = window.scrollY;
 
-    
-    const startInsetY = 40; // Começa com 40% de corte em cima e embaixo
-    const startInsetX = 15; // Começa com 15% de corte nos lados
-
-    const currentInsetY = startInsetY * (1 - progress);
-    const currentInsetX = startInsetX * (1 - progress);
-
-    
-    if (progress === 1) {
-         heroVideo.style.clipPath = 'inset(0% 0% 0% 0%)';
-         if (heroOverlay) heroOverlay.style.clipPath = 'inset(0% 0% 0% 0%)';
-    } else {
-         heroVideo.style.clipPath = `inset(${currentInsetY}% ${currentInsetX}% ${currentInsetY}% ${currentInsetX}%)`;
-         
-         if (heroOverlay) {
-            // O overlay (borda) abre um pouquinho mais rápido para dar o efeito
-            const overlayY = Math.max(0, currentInsetY - 0.5); 
-            const overlayX = Math.max(0, currentInsetX - 0.5); 
-            heroOverlay.style.clipPath = `inset(${overlayY}% ${overlayX}% ${overlayY}% ${overlayX}%)`;
+        // --- Lógica das Cores do MENU (Header) ---
+        if (scrollY > heroAnimationEnd - 50) { 
+            // PASSO 3: Fim da animação -> Fundo sólido (creme), texto escuro/azul
+            header.classList.add('scrolled');
+            header.classList.remove('is-revealing');
+        } else if (scrollY > 50) { 
+            // PASSO 2: Durante o vídeo - Fundo transparente, texto BRANCO
+            header.classList.remove('scrolled');
+            header.classList.add('is-revealing'); 
+        } else {
+            // PASSO 1: Início - Fundo transparente, texto azul original
+            header.classList.remove('scrolled');
+            header.classList.remove('is-revealing');
+        }
+        
+        // --- Lógica da ANIMAÇÃO DO VÍDEO ---
+        if (scrollY < heroAnimationEnd) {
+            // Durante o scroll
+            if(heroVideo) {
+                heroVideo.style.zIndex = '0'; // Vídeo fica no nível base
+                heroVideo.style.position = 'fixed'; // Garante que fique fixo
+                heroVideo.style.top = '0';
+            }
+            handleHeroScroll();
+        } else {
+            // Passou da animação (Página normal)
+            if(heroVideo) {
+                heroVideo.style.clipPath = `inset(0% 0%)`;
+                heroVideo.style.zIndex = '-1'; // Joga para trás para não cobrir o conteúdo seguinte
+                heroVideo.style.position = 'absolute'; // Destrava o vídeo
+                heroVideo.style.top = 'auto';
+                heroVideo.style.bottom = '0';
+            }
+            if(heroOverlay) heroOverlay.style.clipPath = `inset(0% 0%)`;
         }
     }
-}
-
-
-function handleScroll() {
-    if (!heroSection || !header) return; 
-
-    const heroAnimationEnd = heroSection.offsetHeight - window.innerHeight;
-    const scrollY = window.scrollY;
-
-    // --- Lógica das Cores do MENU (Header) ---
-    if (scrollY > heroAnimationEnd - 50) { 
-        // PASSO 3: Fim da animação -> Fundo sólido (creme), texto escuro/azul
-        header.classList.add('scrolled');
-        header.classList.remove('is-revealing');
-    } else if (scrollY > 50) { 
-        // PASSO 2: Durante o vídeo - Fundo transparente, texto BRANCO
-        header.classList.remove('scrolled');
-        header.classList.add('is-revealing'); 
-    } else {
-        // PASSO 1: Início - Fundo transparente, texto azul original
-        header.classList.remove('scrolled');
-        header.classList.remove('is-revealing');
-    }
-    
-    // --- Lógica da ANIMAÇÃO DO VÍDEO ---
-    if (scrollY < heroAnimationEnd) {
-        // Durante o scroll
-        if(heroVideo) {
-            heroVideo.style.zIndex = '0'; // Vídeo fica no nível base
-            heroVideo.style.position = 'fixed'; // Garante que fique fixo
-            heroVideo.style.top = '0';
-        }
-        handleHeroScroll();
-    } else {
-        // Passou da animação
-        if(heroVideo) {
-            heroVideo.style.clipPath = `inset(0% 0%)`;
-            heroVideo.style.zIndex = '-1'; // Joga para trás para não cobrir o conteúdo seguinte
-            heroVideo.style.position = 'absolute'; // Destrava o vídeo (opcional, depende do seu layout)
-            heroVideo.style.top = 'auto';
-            heroVideo.style.bottom = '0';
-        }
-        if(heroOverlay) heroOverlay.style.clipPath = `inset(0% 0%)`;
-    }
-}
     
     // --- 3. ADICIONAR LISTENERS DE EVENTO E EXECUTAR FUNÇÕES INICIAIS ---
     
@@ -162,13 +171,11 @@ function handleScroll() {
                 return;
             }
             
-            /*  Redirecionamento para a página SONS */
+            /* Redirecionamento para a página SONS */
             if (title === '(sons)') {
                 window.location.href = 'sons.html'; 
                 return;
             }
-
-          
 
             const img = card.dataset.img;
             const text = card.dataset.text;
@@ -258,20 +265,20 @@ function handleScroll() {
             } else { 
                 const simpleModalHTML = `
                     <span class="modal-close">&times;</span>
-                     <div class="modal-preview-layout">
-                         <div class="modal-image-container" style="background-image: url('${img}')">
+                      <div class="modal-preview-layout">
+                          <div class="modal-image-container" style="background-image: url('${img}')">
                              <h2 class="modal-title">${title}</h2>
-                         </div>
-                         <div class="modal-text-content">
+                          </div>
+                          <div class="modal-text-content">
                               <p class="modal-quote">${quote || ''}</p>
                               <p>${text || ''}</p>
-                         </div>
-                          <div class="gallery-footer is-visible">
+                          </div>
+                           <div class="gallery-footer is-visible">
                               <div class="modal-exit-button">
                                   <a class="modal-close-trigger">Voltar</a>
                               </div>
-                          </div>
-                     </div>
+                           </div>
+                      </div>
                 `;
                 modalBody.innerHTML = simpleModalHTML;
             }
@@ -399,20 +406,20 @@ function handleScroll() {
                           <div class="nav-arrow" id="prev-arrow"><svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg></div>
                           <div class="nav-arrow" id="next-arrow"><svg viewBox="0 0 24 24"><path d="M8.59 16.59L10 18l6-6-6-6-1.41 1.41L13.17 12z"/></svg></div>
                       </div>
-                     <div class="gallery-carousel">
-                         ${galleryData.map((item, index) => `
-                             <div class="gallery-item" data-index="${index}">
-                                 <img src="${item.img}" alt="${item.title}" class="gallery-image">
-                             </div>
-                         `).join('')}
-                     </div>
+                      <div class="gallery-carousel">
+                          ${galleryData.map((item, index) => `
+                              <div class="gallery-item" data-index="${index}">
+                                  <img src="${item.img}" alt="${item.title}" class="gallery-image">
+                              </div>
+                          `).join('')}
+                      </div>
                  </div>
                  <div class="gallery-info-panel">
                       <div class="gallery-text">
                           <h4></h4>
                           <p></p>
-                     </div>
-                     <div class="gallery-controls">
+                      </div>
+                      <div class="gallery-controls">
                           <button class="control-btn info-toggle" title="Saber mais"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg></button>
                           <button class="control-btn audio-toggle" title="Ouvir"><svg class="play-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg><svg class="pause-icon" style="display:none;" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg></button>
                           <div class="gallery-timer-container">
@@ -421,11 +428,11 @@ function handleScroll() {
                                   <path class="timer-progress" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
                               </svg>
                           </div>
-                     </div>
-                     <div class="extra-info">
+                      </div>
+                      <div class="extra-info">
                           <p></p>
                           <button class="continue-btn">Continuar</button>
-                     </div>
+                      </div>
                  </div>
              </div>
               ${galleryData.map(item => `<audio class="gallery-audio" src="${item.audioSrc}" preload="metadata"></audio>`).join('')}
@@ -470,11 +477,11 @@ function handleScroll() {
                  const rotateY = 45;
 
                  if (itemIdx < currentItem) {
-                      transform = `translateX(-50%) translateZ(-${zTranslate}px) rotateY(${rotateY}deg)`;
+                       transform = `translateX(-50%) translateZ(-${zTranslate}px) rotateY(${rotateY}deg)`;
                  } else if (itemIdx > currentItem) {
-                      transform = `translateX(50%) translateZ(-${zTranslate}px) rotateY(-${rotateY}deg)`;
+                       transform = `translateX(50%) translateZ(-${zTranslate}px) rotateY(-${rotateY}deg)`;
                  } else {
-                      transform = `translateZ(0) rotateY(0)`;
+                       transform = `translateZ(0) rotateY(0)`;
                  }
                  item.style.transform = transform;
                  item.style.opacity = isActive ? '1' : '0.4';
@@ -647,7 +654,7 @@ function handleScroll() {
         item.addEventListener('click', () => {
             if (!panel) return;
             
-            /*  Reset do painel ao clicar */
+            /* Reset do painel ao clicar */
             if (currentPanelAudio && !currentPanelAudio.paused) {
                 currentPanelAudio.pause();
             }
@@ -662,7 +669,7 @@ function handleScroll() {
             if (audioPlayer) audioPlayer.style.display = 'flex';
 
 
-            /*  Fim do Reset */
+            /* Fim do Reset */
 
 
             const panelMediaContainer = panel.querySelector('#panel-media-container');
@@ -749,7 +756,7 @@ function handleScroll() {
 
     if (panelCloseBtn) panelCloseBtn.addEventListener('click', closePanel);
 
-    /*  Fechar o painel ao clicar fora  */
+    /* Fechar o painel ao clicar fora  */
     document.addEventListener('click', function(event) {
         if (!panel || !panel.classList.contains('is-open')) {
             return;
@@ -770,7 +777,7 @@ function handleScroll() {
         const playIcon = panelAudioBtn.querySelector('.play-icon');
         const pauseIcon = panelAudioBtn.querySelector('.pause-icon');
 
-        /*  Lógica para tocar ÁUDIO ou VÍDEO */
+        /* Lógica para tocar ÁUDIO ou VÍDEO */
         panelAudioBtn.addEventListener('click', () => {
             const videoId = panel.dataset.youtubeId;
             const audioSrc = panel.dataset.audioSrc;
@@ -862,10 +869,4 @@ function handleScroll() {
         document.body.classList.add('site-loaded');
     });
 
-
 });
-
-
-
-
-
