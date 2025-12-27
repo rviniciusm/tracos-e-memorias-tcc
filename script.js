@@ -41,14 +41,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Garante que o progresso fique entre 0 e 1
         progress = Math.min(1, Math.max(0, progress));
 
-        // Se o vídeo for menor, forçamos o final da animação um pouco antes (0.95)
-        // para garantir que ele abra todo
         if (progress > 0.95) progress = 1;
-
-        // --- CORREÇÃO DO TEXTO DUPLICADO ---
-        // Aqui está o segredo: fazemos o texto azul (base) sumir 
-        // MUITO rápido (multiplicado por 4). 
-        // Assim que você rolar um pouco, ele some e deixa só o vídeo/texto branco.
         if (heroBase) {
             let baseOpacity = 1 - (progress * 4); 
             if (baseOpacity < 0) baseOpacity = 0;
@@ -61,9 +54,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 heroBase.style.pointerEvents = 'auto';
             }
         }
-        // -----------------------------------
-
-        // Valores de recorte do vídeo
+  
         const initialTop = 25;
         const initialRight = 20;
         const initialBottom = 74.5;
@@ -870,3 +861,4 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
 });
+
