@@ -44,21 +44,19 @@ function handleHeroScroll() {
 
     let progress = window.scrollY / scrollableHeight;
 
-    // --- CORREÇÃO 1: FORÇAR O FINAL ---
+  
     // Se chegou em 98% do caminho, considera 100% para não sobrar bordas
-    if (progress > 0.98) progress = 1;
+    if (progress > 0.93) progress = 1;
     if (progress < 0) progress = 0;
 
-    // --- CORREÇÃO 2: VALORES CENTRALIZADOS ---
-    // Antes estava (25 top / 74 bottom). Isso criava uma tira no topo.
-    // Agora vamos usar valores simétricos para abrir do CENTRO.
+    
     const startInsetY = 40; // Começa com 40% de corte em cima e embaixo
     const startInsetX = 15; // Começa com 15% de corte nos lados
 
     const currentInsetY = startInsetY * (1 - progress);
     const currentInsetX = startInsetX * (1 - progress);
 
-    // Aplica o recorte
+    
     if (progress === 1) {
          heroVideo.style.clipPath = 'inset(0% 0% 0% 0%)';
          if (heroOverlay) heroOverlay.style.clipPath = 'inset(0% 0% 0% 0%)';
@@ -74,7 +72,7 @@ function handleHeroScroll() {
     }
 }
 
-// --- SUBSTITUA A FUNÇÃO handleScroll POR ESTA ---
+
 function handleScroll() {
     if (!heroSection || !header) return; 
 
@@ -82,17 +80,16 @@ function handleScroll() {
     const scrollY = window.scrollY;
 
     // --- Lógica das Cores do MENU (Header) ---
-    // Ajustado para garantir legibilidade
     if (scrollY > heroAnimationEnd - 50) { 
         // PASSO 3: Fim da animação -> Fundo sólido (creme), texto escuro/azul
         header.classList.add('scrolled');
         header.classList.remove('is-revealing');
     } else if (scrollY > 50) { 
-        // PASSO 2: Durante o vídeo -> Fundo transparente, texto BRANCO
+        // PASSO 2: Durante o vídeo - Fundo transparente, texto BRANCO
         header.classList.remove('scrolled');
         header.classList.add('is-revealing'); 
     } else {
-        // PASSO 1: Início -> Fundo transparente, texto azul original
+        // PASSO 1: Início - Fundo transparente, texto azul original
         header.classList.remove('scrolled');
         header.classList.remove('is-revealing');
     }
@@ -867,6 +864,7 @@ function handleScroll() {
 
 
 });
+
 
 
 
