@@ -29,42 +29,39 @@ document.addEventListener('DOMContentLoaded', function() {
     // --- 2.  DEFINA TODAS AS FUNCTIONS ---
 
     function handleHeroScroll() {
-        if (!heroSection || !heroVideo || !heroOverlay) return; 
+    if (!heroSection || !heroVideo || !heroOverlay) return; 
 
-        const scrollableHeight = heroSection.offsetHeight - window.innerHeight;
-        let progress = window.scrollY / scrollableHeight;
-        if (progress < 0) progress = 0;
-        if (progress > 0.95) progress = 1; // Se passou de 95%, considera 100% (Tela Cheia)
+    const scrollableHeight = heroSection.offsetHeight - window.innerHeight;
+    let progress = window.scrollY / scrollableHeight;
+    if (progress < 0) progress = 0;
+    if (progress > 0.95) progress = 1; // Força tela cheia no final
 
-        const initialTop = 25;
-        const initialRight = 20;
-        const initialBottom = 74.5;
-        const initialLeft = 19;
+    const initialTop = 25;
+    const initialRight = 20;
+    const initialBottom = 74.5;
+    const initialLeft = 19;
 
-        const currentTop = initialTop * (1 - progress);
-        const currentRight = initialRight * (1 - progress);
-        const currentBottom = initialBottom * (1 - progress);
-        const currentLeft = initialLeft * (1 - progress);
-        
-    
-        if (progress === 1) {
-             heroVideo.style.clipPath = 'inset(0% 0% 0% 0%)';
-             if (heroOverlay) heroOverlay.style.clipPath = 'inset(0% 0% 0% 0%)';
-        } else {
-             const clipPathValue = `inset(${currentTop}% ${currentRight}% ${currentBottom}% ${currentLeft}%)`;
-             heroVideo.style.clipPath = clipPathValue;
-             
-             if (heroOverlay) {
-                const overlayAdjust = 0.5; 
-                const overlayTop = Math.max(0, currentTop - overlayAdjust); 
-                const overlayRight = Math.max(0, currentRight - overlayAdjust); 
-                const overlayBottom = Math.max(0, currentBottom - overlayAdjust);
-                const overlayLeft = Math.max(0, currentLeft - overlayAdjust);
-                heroOverlay.style.clipPath = `inset(${overlayTop}% ${overlayRight}% ${overlayBottom}% ${overlayLeft}%)`;
-            }
+    const currentTop = initialTop * (1 - progress);
+    const currentRight = initialRight * (1 - progress);
+    const currentBottom = initialBottom * (1 - progress);
+    const currentLeft = initialLeft * (1 - progress);
+    if (progress === 1) {
+         heroVideo.style.clipPath = 'inset(0% 0% 0% 0%)';
+         if (heroOverlay) heroOverlay.style.clipPath = 'inset(0% 0% 0% 0%)';
+    } else {
+         const clipPathValue = `inset(${currentTop}% ${currentRight}% ${currentBottom}% ${currentLeft}%)`;
+         heroVideo.style.clipPath = clipPathValue;
+         
+         if (heroOverlay) {
+            const overlayAdjust = 0.5; 
+            const overlayTop = Math.max(0, currentTop - overlayAdjust); 
+            const overlayRight = Math.max(0, currentRight - overlayAdjust); 
+            const overlayBottom = Math.max(0, currentBottom - overlayAdjust);
+            const overlayLeft = Math.max(0, currentLeft - overlayAdjust);
+            heroOverlay.style.clipPath = `inset(${overlayTop}% ${overlayRight}% ${overlayBottom}% ${overlayLeft}%)`;
         }
     }
-    
+}
     /* --- Lógica do menu em 3 passos --- */
 
     function handleScroll() {
@@ -846,3 +843,4 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 });
+
